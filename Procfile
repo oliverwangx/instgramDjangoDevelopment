@@ -1,1 +1,1 @@
-web:gunicorn Instgram.wsgi --log-file -
+web: gunicorn Instgram.wsgi --log-file -
