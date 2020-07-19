@@ -4,10 +4,10 @@ from django.shortcuts import render
 from Insta.models import Post, Like, InstaUser, UserConnection, Comment
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse, reverse_lazy
-
+from django.http import HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from  Insta.forms import CustomUserCreationForm
+from  Insta.forms import CustomUserCreationForm, CandidateForm
 
 class HelloWorld(TemplateView):
     template_name = 'home.html'
@@ -35,9 +35,16 @@ class UserDetailView(DetailView):
 
 class PostCreateView(LoginRequiredMixin , CreateView):
     model = Post
+    form_class = CandidateForm
     template_name = 'post_create.html'
-    fields = '__all__'
     login_url = 'login'
+    def form_valid(self, form):
+        f = form.save(commit=False)
+        f.author = self.request.user
+        f.save()
+        #return HttpResponseRedirect(self.get_absolute_url())
+        
+        return super().form_valid(form)
 
 class PostUpdateView(UpdateView):
     model = Post
@@ -51,6 +58,11 @@ class PostDeleteView(DeleteView):
     success_url = reverse_lazy("posts")
     ## reverse_lazy delete operaion special
 
+class EditProfile(UpdateView):
+    model = InstaUser
+    template_name = 'edit_profile.html'
+    fields = ['profile_pic', 'username']
+    success_url = reverse_lazy("posts")
 class SignUp(CreateView):
     form_class = CustomUserCreationForm
     template_name = 'signup.html'
@@ -80,7 +92,7 @@ def toggleFollow(request):
     current_user = InstaUser.objects.get(pk=request.user.pk)
     follow_user_pk = request.POST.get('follow_user_pk')
     follow_user = InstaUser.objects.get(pk=follow_user_pk)
-
+    
     try:
         if current_user != follow_user:
             if request.POST.get('type') == 'follow':
@@ -101,10 +113,7 @@ def toggleFollow(request):
         'follow_user_pk': follow_user_pk
     }
 
-class EditProfile(UpdateView):
-    model = InstaUser
-    template_name = 'edit_profile.html'
-    fields = ['profile_pic', 'username']
+
 
 @ajax_request
 def addComment(request):

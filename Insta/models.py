@@ -40,7 +40,7 @@ class Post(models.Model):
     )
     # every time new post have been made
     def get_absolute_url(self):
-        return reverse("post_detail", args=[str(self.id)])
+        return reverse("user_detail", args=[str(self.author.id)])
 
     def __str__(self):
         return self.title
