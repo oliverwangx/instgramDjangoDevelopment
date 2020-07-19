@@ -13,6 +13,11 @@ class HelloWorld(TemplateView):
     template_name = 'home.html'
 
 # ListView function list of object
+
+class ExploreView(ListView):
+    model = InstaUser
+    template_name = "explore.html"
+
 class PostsView(ListView):
     model = Post
     template_name = 'index.html'

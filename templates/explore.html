@@ -1,0 +1,42 @@
+
+{% extends 'base.html' %}
+
+{% load custom_tags %}
+
+{% block content %}
+
+<div class="profile">
+
+    
+    <div class="profile__body">
+        <div class="row">
+        {% for user in object_list %}
+            <div class="col-xs-4">
+               {% if user.profile_pic %}
+                <div class="picture-square" style="background-image: url(http://{{ request.META.HTTP_HOST }}/{{ user.profile_pic.url }}); background-size: contain;">
+        
+                    <a href="{% url 'user_detail' user.pk %}">
+                        <div class="content">
+                        <h1> {{ user.username }} </h1>
+                    </div>
+                    </a>
+                </div>
+                {% else %}
+                <div class="picture-square" ; background-size: contain;>
+        
+                    <a href="{% url 'user_detail' user.pk %}">
+                        <div class="content">
+                        <h1> {{ user.username }} </h1>
+                    </div>
+                    </a>
+                </div>
+
+             {% endif %}
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+
+</div>
+
+{% endblock content %}
