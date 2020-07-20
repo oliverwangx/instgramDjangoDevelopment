@@ -50,10 +50,14 @@
         </div>
     </div>
     <div>   
+        {% if object.author == user %}
         <a href="{% url 'update_post' object.pk %}"> Edit Post </a>
+        {% endif %}
     </div>
     <div>
+        {% if object.author == user %}
         <a href="{% url 'delete_post' object.pk %}"> Delete Post </a>
+        {% endif %}
     </div>
 </div>
 
